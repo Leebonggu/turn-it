@@ -295,43 +295,166 @@ git commit -m "[기능] 타입 정의 및 질문/태그 상수 추가"
 
 ---
 
-### Task 3: Firebase 초기화
+### Task 3: Firebase 프로젝트 생성 + 초기화
+
+> **이 태스크는 수동 작업(Firebase 콘솔) + 코드 작업이 섞여 있음**
+> `services/firebase.ts`는 이미 생성됨 — `.env`에 값만 채우면 됨
 
 **Files:**
-- Create: `services/firebase.ts`
+- Modify: `.env` (Firebase config 값 채우기)
+- 이미 존재: `services/firebase.ts`
 
-- [ ] **Step 1: Firebase 초기화 코드**
+---
 
-```typescript
-// services/firebase.ts
-import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+#### Part A: Firebase 프로젝트 생성 (콘솔 수동 작업)
 
-const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
-};
+- [ ] **Step 1: Firebase 프로젝트 만들기**
 
-const app = initializeApp(firebaseConfig);
+1. https://console.firebase.google.com/ 접속
+2. "프로젝트 추가" 클릭
+3. 프로젝트 이름: `turn-it` 입력
+4. Google 애널리틱스: MVP에서는 **비활성화** (나중에 켜도 됨) → "프로젝트 만들기" 클릭
+5. 프로젝트 생성 완료까지 대기 (30초~1분)
 
-export const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage),
-});
+- [ ] **Step 2: 웹 앱 등록 (Firebase config 값 획득)**
 
-export const db = getFirestore(app);
+> Expo는 JS SDK를 사용하므로 **웹 앱**으로 등록한다.
+
+1. 프로젝트 대시보드 → 톱니바퀴(⚙️) → "프로젝트 설정"
+2. "내 앱" 섹션 → **웹 아이콘(`</>`)** 클릭
+3. 앱 닉네임: `turn-it-web` 입력
+4. "Firebase Hosting 설정" 체크 해제
+5. "앱 등록" 클릭
+6. `firebaseConfig` 객체가 표시됨 — 아래 값들을 `.env`에 복사:
+
+```
+EXPO_PUBLIC_FIREBASE_API_KEY=여기에_apiKey_값
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=여기에_authDomain_값
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=여기에_projectId_값
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=여기에_storageBucket_값
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=여기에_messagingSenderId_값
+EXPO_PUBLIC_FIREBASE_APP_ID=여기에_appId_값
 ```
 
-- [ ] **Step 2: 커밋**
+7. "콘솔로 이동" 클릭
+
+---
+
+#### Part B: Firebase Authentication 활성화
+
+- [ ] **Step 3: Authentication 서비스 켜기**
+
+1. Firebase 콘솔 좌측 메뉴 → "빌드" → "Authentication" 클릭
+2. "시작하기" 클릭
+3. "로그인 방법" 탭으로 이동
+
+- [ ] **Step 4: Google 로그인 제공업체 활성화**
+
+1. "새 제공업체 추가" → "Google" 선택
+2. "사용 설정" 토글 ON
+3. 프로젝트 공개용 이름: `turn-it` (사용자에게 보이는 이름)
+4. 프로젝트 지원 이메일: 본인 이메일 선택
+5. "저장" 클릭
+
+---
+
+#### Part C: Google OAuth 클라이언트 ID 획득
+
+- [ ] **Step 5: 웹 클라이언트 ID 확인**
+
+> Google 로그인 활성화하면 자동으로 OAuth 클라이언트가 생성된다.
+
+1. Firebase 콘솔 → "Authentication" → "로그인 방법" → "Google" 클릭
+2. "웹 SDK 구성" 섹션 펼치기
+3. **"웹 클라이언트 ID"** 값 복사 → `.env`에 입력:
+
+```
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=여기에_웹_클라이언트_ID
+```
+
+- [ ] **Step 6: iOS 클라이언트 ID 생성 (iOS 테스트 시 필요)**
+
+> Expo Go에서는 웹 클라이언트 ID만으로 동작하지만, EAS 빌드(standalone)에서는 iOS 클라이언트 ID가 필요하다.
+> **당장은 스킵해도 됨** — Expo Go 테스트 단계에서는 웹 클라이언트 ID만 있으면 OK.
+
+1. https://console.cloud.google.com/apis/credentials 접속
+2. 상단에서 Firebase 프로젝트(`turn-it`) 선택
+3. "사용자 인증 정보 만들기" → "OAuth 클라이언트 ID"
+4. 애플리케이션 유형: **iOS**
+5. 이름: `turn-it-ios`
+6. 번들 ID: `com.turnit.app` (app.json의 `ios.bundleIdentifier`와 동일해야 함)
+7. "만들기" 클릭 → 클라이언트 ID 복사 → `.env`에 입력:
+
+```
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=여기에_iOS_클라이언트_ID
+```
+
+---
+
+#### Part D: Firestore 데이터베이스 생성
+
+- [ ] **Step 7: Firestore 생성**
+
+1. Firebase 콘솔 좌측 메뉴 → "빌드" → "Firestore Database" 클릭
+2. "데이터베이스 만들기" 클릭
+3. 위치 선택: **asia-northeast3 (서울)** ← 한국 서비스이므로 서울 리전 선택
+4. 보안 규칙: **"테스트 모드에서 시작"** 선택 (30일간 모든 읽기/쓰기 허용)
+   - MVP 개발 중에는 테스트 모드로 충분
+   - 나중에 Task에서 `firestore.rules` 배포할 예정
+5. "만들기" 클릭
+
+---
+
+#### Part E: `.env` 최종 확인 + 코드 검증
+
+- [ ] **Step 8: `.env` 파일 값 채우기 확인**
+
+모든 값이 채워졌는지 체크:
+
+```
+EXPO_PUBLIC_FIREBASE_API_KEY=AIzaSy...        ← 필수
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=turn-it-xxxxx.firebaseapp.com  ← 필수
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=turn-it-xxxxx  ← 필수
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=turn-it-xxxxx.firebasestorage.app  ← 필수
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789  ← 필수
+EXPO_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123  ← 필수
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=123456789-xxx.apps.googleusercontent.com  ← 필수
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=               ← 선택 (EAS 빌드 전까지)
+EXPO_PUBLIC_AI_API_KEY=                         ← 나중에 (Gemini API 태스크에서)
+```
+
+- [ ] **Step 9: `services/firebase.ts` 확인**
+
+> 이미 생성되어 있음 — import 경로만 재확인
+
+```typescript
+// services/firebase.ts — 이미 존재하는 파일. 변경 불필요.
+// getReactNativePersistence import 경로가 'firebase/auth/react-native'인지 확인
+import { getReactNativePersistence } from 'firebase/auth/react-native';
+// ↑ Firebase JS SDK v12에서는 이 경로가 맞음
+// 만약 에러 나면 'firebase/auth'에서 직접 import 시도
+```
+
+- [ ] **Step 10: 앱 실행해서 Firebase 연결 확인**
 
 ```bash
-git add services/firebase.ts
-git commit -m "[설정] Firebase 초기화 설정"
+npx expo start
+```
+
+- 앱이 크래시 없이 뜨면 Firebase 초기화 성공
+- 콘솔에 `Firebase: No Firebase App` 에러가 없으면 OK
+- 이 단계에서는 로그인 기능은 아직 없음 — 크래시만 안 나면 통과
+
+- [ ] **Step 11: 커밋**
+
+> `.env`는 gitignore 대상이므로 커밋에 포함되지 않음.
+> `services/firebase.ts`는 이미 커밋됨 — 변경사항이 있을 때만 커밋.
+
+```bash
+# .env가 .gitignore에 있는지 확인
+grep -q "^\.env$" .gitignore || echo ".env" >> .gitignore
+git add .gitignore
+git commit -m "[설정] .gitignore에 .env 추가"
 ```
 
 ---
