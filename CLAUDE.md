@@ -112,6 +112,7 @@ type Tag = '업무' | '이동' | '쇼핑' | '음식' | '앱/서비스' | '사람
 - 패키지 매니저: pnpm
 - 포맷팅: Prettier (기본 설정)
 - 린팅: ESLint (Expo 기본 설정)
+- 테스트: 코드 작성 시 항상 테스트 코드도 함께 작성할 것 (Jest)
 
 ### React Native / Expo
 - 라우팅: Expo Router (파일 기반)
