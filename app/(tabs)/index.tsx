@@ -1,19 +1,30 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useCycle } from '../../hooks/useCycle';
+import { useToast } from '../../hooks/useToast';
 import { QUESTIONS } from '../../constants/questions';
 import { getQuestionForCycle } from '../../utils/cycle';
 import QuestionCard from '../../components/QuestionCard';
 import CycleProgress from '../../components/CycleProgress';
+import HomeSkeleton from '../../components/HomeSkeleton';
 import Button from '../../components/ui/Button';
 import { colors, spacing, fontSize, fontWeight, lineHeight } from '../../theme';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { userData, currentComplaints, cycleStatus, todayRecorded, startCycle, resetCurrentCycle, refresh } = useCycle();
+  const { showToast } = useToast();
+  const { userData, currentComplaints, cycleStatus, todayRecorded, isLoading, startCycle, resetCurrentCycle, refresh } = useCycle();
+  const [refreshing, setRefreshing] = useState(false);
 
   const questionIndex = getQuestionForCycle(currentComplaints.length, QUESTIONS.length);
   const question = QUESTIONS[questionIndex];
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refresh();
+    setRefreshing(false);
+  };
 
   const handleRecord = () => {
     router.push({ pathname: '/record', params: { questionId: question.id } });
@@ -23,20 +34,40 @@ export default function HomeScreen() {
     router.push({ pathname: '/(tabs)/ideas', params: { analyze: 'true' } });
   };
 
+  const handleStartCycle = async () => {
+    await startCycle();
+    showToast('새 사이클이 시작되었어요!', 'success');
+  };
+
+  const handleResetCycle = async () => {
+    await resetCurrentCycle();
+    showToast('새 사이클이 시작되었어요!', 'success');
+  };
+
+  if (isLoading && !refreshing) {
+    return <HomeSkeleton />;
+  }
+
   if (cycleStatus === 'not_started') {
     return (
-      <View style={styles.container}>
-        <View style={styles.centered}>
-          <Text style={styles.emptyTitle}>새로운 사이클을 시작해보세요</Text>
-          <Text style={styles.emptySubtitle}>매일 불편함을 기록하고{'\n'}AI가 사업 아이디어를 만들어드려요</Text>
-          <Button title="사이클 시작하기" onPress={startCycle} />
-        </View>
-      </View>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.centered}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
+        <Text style={styles.emptyTitle}>새로운 사이클을 시작해보세요</Text>
+        <Text style={styles.emptySubtitle}>매일 불편함을 기록하고{'\n'}AI가 사업 아이디어를 만들어드려요</Text>
+        <Button title="사이클 시작하기" onPress={handleStartCycle} />
+      </ScrollView>
     );
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+    >
       <Text style={styles.sectionTitle}>오늘의 질문</Text>
       <QuestionCard question={question} />
 
@@ -67,7 +98,7 @@ export default function HomeScreen() {
           <Button
             title="새로운 사이클 시작하기"
             variant="outline"
-            onPress={resetCurrentCycle}
+            onPress={handleResetCycle}
             style={{ marginTop: spacing.md }}
           />
         </View>

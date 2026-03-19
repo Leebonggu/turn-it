@@ -4,15 +4,30 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAuth } from '../hooks/useAuth';
 import { useNotification } from '../hooks/useNotification';
 import { useCycle } from '../hooks/useCycle';
+import { useNetworkStatus } from '../hooks/useNetworkStatus';
 import { updateUser } from '../services/firestore';
+import { ToastProvider } from '../hooks/useToast';
+import ErrorBoundary from '../components/ErrorBoundary';
 import NotificationTimeSheet from '../components/NotificationTimeSheet';
+import OfflineBanner from '../components/OfflineBanner';
 
 export default function RootLayout() {
+  return (
+    <ErrorBoundary>
+      <ToastProvider>
+        <RootLayoutInner />
+      </ToastProvider>
+    </ErrorBoundary>
+  );
+}
+
+function RootLayoutInner() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const segments = useSegments();
   const { scheduleDaily } = useNotification();
   const { userData } = useCycle();
+  const { isConnected } = useNetworkStatus();
   const [showTimeSheet, setShowTimeSheet] = useState(false);
 
   useEffect(() => {
@@ -56,6 +71,7 @@ export default function RootLayout() {
 
   return (
     <>
+      {!isConnected && <OfflineBanner />}
       <Slot />
       <NotificationTimeSheet
         visible={showTimeSheet}

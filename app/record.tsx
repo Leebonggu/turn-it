@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import {
-  View, Text, TextInput, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform,
+  View, Text, TextInput, StyleSheet, ScrollView, KeyboardAvoidingView, Platform,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '../stores/authStore';
 import { useCycleStore } from '../stores/cycleStore';
+import { useToast } from '../hooks/useToast';
 import { addComplaint, startNewCycle } from '../services/firestore';
 import { QUESTIONS } from '../constants/questions';
 import { Tag } from '../types';
@@ -20,6 +21,7 @@ export default function RecordScreen() {
   const { questionId } = useLocalSearchParams<{ questionId: string }>();
   const { firebaseUser } = useAuthStore();
   const { userData } = useCycleStore();
+  const { showToast } = useToast();
 
   const question = QUESTIONS.find((q) => q.id === questionId) ?? QUESTIONS[0];
 
@@ -35,7 +37,7 @@ export default function RecordScreen() {
 
   const handleSave = async () => {
     if (!content.trim()) {
-      Alert.alert('내용을 입력해주세요');
+      showToast('내용을 입력해주세요', 'error');
       return;
     }
     if (!firebaseUser) return;
@@ -55,9 +57,10 @@ export default function RecordScreen() {
         cycleId,
       });
 
+      showToast('기록이 저장되었어요!', 'success');
       router.back();
     } catch (e: any) {
-      Alert.alert('저장 실패', e.message);
+      showToast('저장에 실패했어요. 다시 시도해주세요.', 'error');
     } finally {
       setIsSaving(false);
     }

@@ -2685,14 +2685,20 @@ git commit -m "[설정] Firebase 환경 설정 및 통합 테스트 완료"
 ### 추가 할일 (MVP 이후)
 
 - [ ] **Apple 로그인**: App Store 제출 요건. `expo-apple-authentication` 사용.
-- [ ] **온보딩 화면**: 서비스 소개 3장 슬라이드 (`(auth)/onboarding.tsx`).
-- [ ] **Toast 컴포넌트**: 기록 저장/삭제 등 피드백 UI (`components/ui/Toast.tsx`).
-- [ ] **Pull-to-refresh 개선**: 홈 화면에도 새로고침 추가 (현재 목록 화면만 있음).
-- [ ] **에러 바운더리**: 전역 에러 처리 + 폴백 UI.
-- [ ] **스켈레톤 로딩**: ActivityIndicator 대신 컨텐츠 형태의 스켈레톤 UI.
+- [x] **온보딩 화면**: 서비스 소개 3장 슬라이드 (`(auth)/onboarding.tsx`).
+- [x] **Toast 컴포넌트**: 기록 저장/삭제 등 피드백 UI + ToastProvider 전역 컨텍스트.
+- [x] **Pull-to-refresh 개선**: 홈 화면에 RefreshControl 추가.
+- [x] **에러 바운더리**: 전역 ErrorBoundary + 폴백 UI (dev 환경에서 에러 메시지 표시).
+- [x] **스켈레톤 로딩**: Skeleton 컴포넌트 + HomeSkeleton.
 - [ ] **다크 모드**: `theme/colors.ts`에 dark 팔레트 추가 + `useColorScheme()` 연동.
 - [ ] **앱 아이콘/스플래시**: 브랜딩 확정 후 에셋 교체.
 - [ ] **분석/통계**: 사이클별 기록 통계, 태그 분포 차트.
-- [ ] **오프라인 지원**: Firestore 오프라인 캐시 활성화 + 네트워크 상태 UI.
+- [x] **오프라인 지원**: Firestore 오프라인 캐시 + OfflineBanner + useNetworkStatus 훅.
 - [ ] **성능 최적화**: FlatList `getItemLayout`, 컴포넌트 `React.memo` 적용.
 - [ ] **E2E 테스트**: Detox 또는 Maestro로 주요 플로우 자동화.
+- [ ] **아이디어 상세 Toast**: 상태 변경 시 피드백 Toast 추가.
+- [ ] **불만 삭제**: 스와이프 삭제 + 확인 다이얼로그.
+- [ ] **사이클 히스토리**: 과거 사이클 목록 + 아이디어 재조회.
+- [ ] **질문 풀 확장**: 10개 → 30개 (카테고리별 균형 배분).
+- [ ] **로딩 상태 세분화**: 아이디어 생성 중 진행률/단계 표시.
+- [ ] **SafeAreaView 통합**: 노치/홈 인디케이터 대응.
