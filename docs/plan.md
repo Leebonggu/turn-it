@@ -576,7 +576,7 @@ git commit -m "[기능] Firebase 인증 서비스, 스토어, 훅 구현"
 - Create: `app/(auth)/login.tsx`
 - Create: `app/(tabs)/_layout.tsx`
 
-- [ ] **Step 1: 루트 레이아웃**
+- [x] **Step 1: 루트 레이아웃**
 
 ```typescript
 // app/_layout.tsx
@@ -622,7 +622,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 2: 인증 레이아웃**
+- [x] **Step 2: 인증 레이아웃**
 
 ```typescript
 // app/(auth)/_layout.tsx
@@ -633,13 +633,13 @@ export default function AuthLayout() {
 }
 ```
 
-- [ ] **Step 3: 인증 관련 추가 의존성 설치**
+- [x] **Step 3: 인증 관련 추가 의존성 설치**
 
 ```bash
 npx expo install expo-auth-session expo-crypto expo-web-browser
 ```
 
-- [ ] **Step 4: 로그인 화면 — Google 로그인**
+- [x] **Step 4: 로그인 화면 — Google 로그인**
 
 ```typescript
 // app/(auth)/login.tsx
@@ -688,7 +688,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 5: 탭 레이아웃 (플레이스홀더)**
+- [x] **Step 5: 탭 레이아웃 (플레이스홀더)**
 
 ```typescript
 // app/(tabs)/_layout.tsx
@@ -731,7 +731,7 @@ export default function TabLayout() {
 }
 ```
 
-- [ ] **Step 6: 탭 화면 플레이스홀더 생성**
+- [x] **Step 6: 탭 화면 플레이스홀더 생성**
 
 ```typescript
 // app/(tabs)/index.tsx
@@ -750,7 +750,7 @@ const styles = StyleSheet.create({
 
 동일한 패턴으로 `complaints.tsx`, `ideas.tsx`, `settings.tsx` 생성.
 
-- [ ] **Step 7: UI Button 컴포넌트 생성**
+- [x] **Step 7: UI Button 컴포넌트 생성**
 
 ```typescript
 // components/ui/Button.tsx
@@ -811,7 +811,7 @@ npx expo start
 ```
 Expected: 로그인 화면 표시. 로그인 후 탭 화면 이동.
 
-- [ ] **Step 9: 커밋**
+- [x] **Step 9: 커밋**
 
 ```bash
 git add app/ components/
@@ -2665,3 +2665,15 @@ git commit -m "[설정] Firebase 환경 설정 및 통합 테스트 완료"
 | **Week 4** | 16~18 | 3~4시간 | 로컬 알림 + 리셋 + 통합 테스트 |
 
 **총 예상 시간: ~20시간** (평일 1시간 × 12일 + 주말 2회 × 4시간)
+
+---
+
+## v2 보완사항 (구현 중 발견)
+
+> MVP 구현 중 발견한 개선사항/리팩토링 목록. MVP 완성 후 진행.
+
+- [ ] **jest 설정 정리**: jest 30 + react-native 0.83 ESM 호환 문제로 jest 29로 다운그레이드함. jest-expo가 jest 30을 공식 지원하면 업그레이드 필요.
+- [ ] **@testing-library/jest-native deprecated**: `@testing-library/react-native` v12.4+의 내장 Jest matchers로 마이그레이션 필요.
+- [ ] **Button 컴포넌트 접근성**: `accessibilityRole="button"`, `accessibilityState={{ disabled }}` 추가.
+- [ ] **로그인 화면 UX**: 로딩 상태 표시, 에러 재시도 UI, Apple 로그인 추가.
+- [ ] **탭 아이콘**: 이모지 대신 `@expo/vector-icons` 사용으로 교체.
