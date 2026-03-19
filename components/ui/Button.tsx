@@ -1,4 +1,5 @@
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { colors, spacing, fontSize, fontWeight, radius } from '../../theme';
 
 interface ButtonProps {
   title: string;
@@ -21,6 +22,8 @@ export default function Button({ title, onPress, disabled, variant = 'primary', 
       ]}
       onPress={onPress}
       disabled={disabled}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: !!disabled }}
     >
       <Text style={[
         styles.text,
@@ -34,15 +37,15 @@ export default function Button({ title, onPress, disabled, variant = 'primary', 
 
 const styles = StyleSheet.create({
   base: {
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing['2xl'],
+    borderRadius: radius.md,
     alignItems: 'center',
   },
-  primary: { backgroundColor: '#4F46E5' },
-  dark: { backgroundColor: '#1C1C1E' },
-  outline: { backgroundColor: 'transparent', borderWidth: 1, borderColor: '#D1D5DB' },
+  primary: { backgroundColor: colors.primary },
+  dark: { backgroundColor: colors.primaryDark },
+  outline: { backgroundColor: colors.transparent, borderWidth: 1, borderColor: colors.border },
   disabled: { opacity: 0.5 },
-  text: { color: '#fff', fontSize: 16, fontWeight: '600' },
-  outlineText: { color: '#374151' },
+  text: { color: colors.textInverse, fontSize: fontSize.lg, fontWeight: fontWeight.semibold },
+  outlineText: { color: colors.textSecondary },
 });

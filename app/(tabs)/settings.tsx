@@ -6,6 +6,7 @@ import { updateUser } from '../../services/firestore';
 import { signOut } from '../../services/auth';
 import Button from '../../components/ui/Button';
 import NotificationTimeSheet from '../../components/NotificationTimeSheet';
+import { colors, spacing, fontSize, fontWeight } from '../../theme';
 
 export default function SettingsScreen() {
   const { firebaseUser } = useAuthStore();
@@ -53,8 +54,8 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9FAFB', padding: 20 },
-  section: { marginBottom: 32 },
-  label: { fontSize: 16, fontWeight: '600', color: '#374151', marginBottom: 12 },
-  email: { fontSize: 14, color: '#6B7280', marginBottom: 12 },
+  container: { flex: 1, backgroundColor: colors.bg, padding: spacing.xl },
+  section: { marginBottom: spacing['3xl'] },
+  label: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.textSecondary, marginBottom: spacing.md },
+  email: { fontSize: fontSize.base, color: colors.textTertiary, marginBottom: spacing.md },
 });

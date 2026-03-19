@@ -2674,6 +2674,9 @@ git commit -m "[설정] Firebase 환경 설정 및 통합 테스트 완료"
 
 - [ ] **jest 설정 정리**: jest 30 + react-native 0.83 ESM 호환 문제로 jest 29로 다운그레이드함. jest-expo가 jest 30을 공식 지원하면 업그레이드 필요.
 - [ ] **@testing-library/jest-native deprecated**: `@testing-library/react-native` v12.4+의 내장 Jest matchers로 마이그레이션 필요.
-- [ ] **Button 컴포넌트 접근성**: `accessibilityRole="button"`, `accessibilityState={{ disabled }}` 추가.
+- [x] **Button 컴포넌트 접근성**: `accessibilityRole="button"`, `accessibilityState={{ disabled }}` 추가.
 - [ ] **로그인 화면 UX**: 로딩 상태 표시, 에러 재시도 UI, Apple 로그인 추가.
 - [ ] **탭 아이콘**: 이모지 대신 `@expo/vector-icons` 사용으로 교체.
+- [x] **디자인 시스템**: `theme/` 디렉토리에 colors, spacing, typography, radius, shadows 토큰 정의. 전체 컴포넌트 리팩토링 완료.
+- [x] **색상 불일치 수정**: 로그인 화면 `#666` → `colors.textTertiary`, 리스트 패딩 불일치 수정.
+- [x] **IdeaCard/TagSelector 접근성**: accessibilityRole, accessibilityState 추가.

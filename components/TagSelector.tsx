@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Tag } from '../types';
 import { TAGS } from '../constants/tags';
+import { colors, spacing, fontSize, radius } from '../theme';
 
 interface TagSelectorProps {
   selected: Tag[];
@@ -15,6 +16,8 @@ export default function TagSelector({ selected, onToggle }: TagSelectorProps) {
           key={tag}
           style={[styles.tag, selected.includes(tag) && styles.tagSelected]}
           onPress={() => onToggle(tag)}
+          accessibilityRole="button"
+          accessibilityState={{ selected: selected.includes(tag) }}
         >
           <Text style={[styles.tagText, selected.includes(tag) && styles.tagTextSelected]}>
             {tag}
@@ -26,14 +29,14 @@ export default function TagSelector({ selected, onToggle }: TagSelectorProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  container: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   tag: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    backgroundColor: '#F3F4F6',
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radius.xl,
+    backgroundColor: colors.surfaceMuted,
   },
-  tagSelected: { backgroundColor: '#4F46E5' },
-  tagText: { fontSize: 14, color: '#374151' },
-  tagTextSelected: { color: '#fff' },
+  tagSelected: { backgroundColor: colors.primary },
+  tagText: { fontSize: fontSize.base, color: colors.textSecondary },
+  tagTextSelected: { color: colors.textInverse },
 });

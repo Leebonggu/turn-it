@@ -7,6 +7,7 @@ import { Idea, Complaint } from '../../types';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import ComplaintItem from '../../components/ComplaintItem';
+import { colors, spacing, fontSize, fontWeight, lineHeight } from '../../theme';
 
 export default function IdeaDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -52,22 +53,22 @@ export default function IdeaDetailScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>{idea.title}</Text>
 
-      <Card style={{ marginBottom: 16 }}>
+      <Card style={{ marginBottom: spacing.lg }}>
         <Text style={styles.label}>타겟 고객</Text>
         <Text style={styles.body}>{idea.targetCustomer}</Text>
       </Card>
 
-      <Card style={{ marginBottom: 16 }}>
+      <Card style={{ marginBottom: spacing.lg }}>
         <Text style={styles.label}>해결 방안</Text>
         <Text style={styles.body}>{idea.solution}</Text>
       </Card>
 
-      <Card style={{ marginBottom: 16 }}>
+      <Card style={{ marginBottom: spacing.lg }}>
         <Text style={styles.label}>시장 가능성</Text>
         <Text style={styles.body}>{idea.marketPotential}</Text>
       </Card>
 
-      <Text style={[styles.label, { marginTop: 8, marginBottom: 12 }]}>기반 불만</Text>
+      <Text style={[styles.label, { marginTop: spacing.sm, marginBottom: spacing.md }]}>기반 불만</Text>
       {relatedComplaints.map((c) => (
         <ComplaintItem key={c.id} complaint={c} />
       ))}
@@ -97,11 +98,11 @@ export default function IdeaDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9FAFB' },
-  content: { padding: 20 },
+  container: { flex: 1, backgroundColor: colors.bg },
+  content: { padding: spacing.xl },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 24, fontWeight: '700', color: '#1F2937', marginBottom: 20 },
-  label: { fontSize: 13, fontWeight: '600', color: '#6B7280', marginBottom: 6 },
-  body: { fontSize: 15, color: '#1F2937', lineHeight: 22 },
-  actions: { flexDirection: 'row', gap: 8, marginTop: 24 },
+  title: { fontSize: fontSize['3xl'], fontWeight: fontWeight.bold, color: colors.text, marginBottom: spacing.xl },
+  label: { fontSize: fontSize.sm, fontWeight: fontWeight.semibold, color: colors.textTertiary, marginBottom: 6 },
+  body: { fontSize: fontSize.md, color: colors.text, lineHeight: lineHeight.normal },
+  actions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing['2xl'] },
 });

@@ -50,4 +50,19 @@ describe('Button', () => {
     );
     expect(getByText('커스텀')).toBeTruthy();
   });
+
+  it('has correct accessibility role', () => {
+    const { getByRole } = render(
+      <Button title="접근성" onPress={() => {}} />
+    );
+    expect(getByRole('button')).toBeTruthy();
+  });
+
+  it('has disabled accessibility state when disabled', () => {
+    const { getByRole } = render(
+      <Button title="비활성" onPress={() => {}} disabled />
+    );
+    const button = getByRole('button');
+    expect(button.props.accessibilityState).toEqual({ disabled: true });
+  });
 });

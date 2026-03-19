@@ -6,6 +6,7 @@ import { getQuestionForCycle } from '../../utils/cycle';
 import QuestionCard from '../../components/QuestionCard';
 import CycleProgress from '../../components/CycleProgress';
 import Button from '../../components/ui/Button';
+import { colors, spacing, fontSize, fontWeight, lineHeight } from '../../theme';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -44,14 +45,14 @@ export default function HomeScreen() {
           <Text style={styles.doneText}>오늘 기록 완료!</Text>
         </View>
       ) : (
-        <Button title="기록하기" onPress={handleRecord} style={{ marginTop: 16 }} />
+        <Button title="기록하기" onPress={handleRecord} style={{ marginTop: spacing.lg }} />
       )}
 
-      <Text style={[styles.sectionTitle, { marginTop: 32 }]}>사이클 진행률</Text>
+      <Text style={[styles.sectionTitle, { marginTop: spacing['3xl'] }]}>사이클 진행률</Text>
       <CycleProgress count={currentComplaints.length} />
 
       {cycleStatus === 'early_analysis' && (
-        <View style={{ marginTop: 24 }}>
+        <View style={{ marginTop: spacing['2xl'] }}>
           <Text style={styles.warningText}>
             아직 기록이 부족해요. 더 기록하면 더 좋은 아이디어가 나올 수 있어요
           </Text>
@@ -60,14 +61,14 @@ export default function HomeScreen() {
       )}
 
       {cycleStatus === 'ready' && (
-        <View style={{ marginTop: 24 }}>
+        <View style={{ marginTop: spacing['2xl'] }}>
           <Text style={styles.readyText}>기록이 충분해요! 아이디어를 만들어볼까요?</Text>
           <Button title="아이디어 생성하기" onPress={handleAnalyze} />
           <Button
             title="새로운 사이클 시작하기"
             variant="outline"
             onPress={resetCurrentCycle}
-            style={{ marginTop: 12 }}
+            style={{ marginTop: spacing.md }}
           />
         </View>
       )}
@@ -76,16 +77,16 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9FAFB' },
-  content: { padding: 20 },
-  centered: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
-  sectionTitle: { fontSize: 16, fontWeight: '600', color: '#374151', marginBottom: 12 },
-  emptyTitle: { fontSize: 22, fontWeight: '700', marginBottom: 8, textAlign: 'center' },
-  emptySubtitle: { fontSize: 15, color: '#6B7280', textAlign: 'center', marginBottom: 32, lineHeight: 22 },
+  container: { flex: 1, backgroundColor: colors.bg },
+  content: { padding: spacing.xl },
+  centered: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xl },
+  sectionTitle: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.textSecondary, marginBottom: spacing.md },
+  emptyTitle: { fontSize: fontSize['2xl'], fontWeight: fontWeight.bold, marginBottom: spacing.sm, textAlign: 'center' },
+  emptySubtitle: { fontSize: fontSize.md, color: colors.textTertiary, textAlign: 'center', marginBottom: spacing['3xl'], lineHeight: lineHeight.normal },
   doneBox: {
-    marginTop: 16, padding: 16, backgroundColor: '#ECFDF5', borderRadius: 12, alignItems: 'center',
+    marginTop: spacing.lg, padding: spacing.lg, backgroundColor: colors.successBg, borderRadius: 12, alignItems: 'center',
   },
-  doneText: { fontSize: 16, fontWeight: '600', color: '#059669' },
-  warningText: { fontSize: 14, color: '#D97706', marginBottom: 12, lineHeight: 20 },
-  readyText: { fontSize: 16, fontWeight: '600', color: '#4F46E5', marginBottom: 12 },
+  doneText: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.success },
+  warningText: { fontSize: fontSize.base, color: colors.warning, marginBottom: spacing.md, lineHeight: lineHeight.tight },
+  readyText: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.primary, marginBottom: spacing.md },
 });

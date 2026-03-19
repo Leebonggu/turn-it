@@ -3,6 +3,7 @@ import * as Google from 'expo-auth-session/providers/google';
 import { useEffect } from 'react';
 import { signInWithGoogle } from '../../services/auth';
 import Button from '../../components/ui/Button';
+import { colors, spacing, fontSize, fontWeight } from '../../theme';
 
 export default function LoginScreen() {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
@@ -35,9 +36,9 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 24, backgroundColor: '#fff' },
-  header: { alignItems: 'center', marginBottom: 48 },
-  title: { fontSize: 32, fontWeight: '700', marginBottom: 8 },
-  subtitle: { fontSize: 16, color: '#666' },
-  buttons: { gap: 12 },
+  container: { flex: 1, justifyContent: 'center', padding: spacing['2xl'], backgroundColor: colors.surface },
+  header: { alignItems: 'center', marginBottom: spacing['4xl'] },
+  title: { fontSize: fontSize['4xl'], fontWeight: fontWeight.bold, marginBottom: spacing.sm },
+  subtitle: { fontSize: fontSize.lg, color: colors.textTertiary },
+  buttons: { gap: spacing.md },
 });

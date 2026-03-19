@@ -7,6 +7,7 @@ import { getAllIdeas } from '../../services/firestore';
 import { generateIdeas } from '../../services/ai';
 import { Idea } from '../../types';
 import IdeaCard from '../../components/IdeaCard';
+import { colors, spacing, fontSize } from '../../theme';
 
 export default function IdeasScreen() {
   const router = useRouter();
@@ -73,9 +74,9 @@ export default function IdeasScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9FAFB' },
-  list: { padding: 16 },
+  container: { flex: 1, backgroundColor: colors.bg },
+  list: { padding: spacing.xl },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  empty: { fontSize: 16, color: '#9CA3AF' },
-  genText: { marginTop: 12, fontSize: 14, color: '#6B7280' },
+  empty: { fontSize: fontSize.lg, color: colors.textMuted },
+  genText: { marginTop: spacing.md, fontSize: fontSize.base, color: colors.textTertiary },
 });

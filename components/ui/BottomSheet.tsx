@@ -1,5 +1,6 @@
 import { Modal, View, Text, StyleSheet, Pressable } from 'react-native';
 import { ReactNode } from 'react';
+import { colors, spacing, fontSize, fontWeight, radius } from '../../theme';
 
 interface BottomSheetProps {
   visible: boolean;
@@ -22,10 +23,13 @@ export default function BottomSheet({ visible, onClose, title, children }: Botto
 }
 
 const styles = StyleSheet.create({
-  overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' },
+  overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: colors.overlay },
   sheet: {
-    backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20,
-    padding: 24, paddingBottom: 40,
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
+    padding: spacing['2xl'],
+    paddingBottom: 40,
   },
-  title: { fontSize: 18, fontWeight: '700', marginBottom: 20 },
+  title: { fontSize: fontSize.xl, fontWeight: fontWeight.bold, marginBottom: spacing.xl },
 });

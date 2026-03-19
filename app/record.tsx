@@ -11,6 +11,7 @@ import { Tag } from '../types';
 import TagSelector from '../components/TagSelector';
 import QuestionCard from '../components/QuestionCard';
 import Button from '../components/ui/Button';
+import { colors, spacing, fontSize, fontWeight, radius } from '../theme';
 
 const MAX_LENGTH = 200;
 
@@ -89,7 +90,7 @@ export default function RecordScreen() {
           title="저장하기"
           onPress={handleSave}
           disabled={!content.trim() || isSaving}
-          style={{ marginTop: 32 }}
+          style={{ marginTop: spacing['3xl'] }}
         />
       </ScrollView>
     </KeyboardAvoidingView>
@@ -97,12 +98,12 @@ export default function RecordScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9FAFB' },
-  content: { padding: 20 },
-  label: { fontSize: 16, fontWeight: '600', color: '#374151', marginTop: 24, marginBottom: 8 },
+  container: { flex: 1, backgroundColor: colors.bg },
+  content: { padding: spacing.xl },
+  label: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.textSecondary, marginTop: spacing['2xl'], marginBottom: spacing.sm },
   input: {
-    backgroundColor: '#fff', borderRadius: 12, padding: 16,
-    fontSize: 16, minHeight: 120, borderWidth: 1, borderColor: '#E5E7EB',
+    backgroundColor: colors.surface, borderRadius: radius.md, padding: spacing.lg,
+    fontSize: fontSize.lg, minHeight: 120, borderWidth: 1, borderColor: colors.borderLight,
   },
-  charCount: { fontSize: 12, color: '#9CA3AF', textAlign: 'right', marginTop: 4 },
+  charCount: { fontSize: fontSize.xs, color: colors.textMuted, textAlign: 'right', marginTop: spacing.xs },
 });

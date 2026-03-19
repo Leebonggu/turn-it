@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { colors, spacing, fontSize, fontWeight, radius } from '../theme';
 
 interface CycleProgressProps {
   count: number;
@@ -19,10 +20,10 @@ export default function CycleProgress({ count, max = 7 }: CycleProgressProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  container: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   barBackground: {
-    flex: 1, height: 8, backgroundColor: '#E5E7EB', borderRadius: 4, overflow: 'hidden',
+    flex: 1, height: 8, backgroundColor: colors.borderLight, borderRadius: radius.sm, overflow: 'hidden',
   },
-  barFill: { height: '100%', backgroundColor: '#4F46E5', borderRadius: 4 },
-  text: { fontSize: 14, fontWeight: '600', color: '#374151', minWidth: 30 },
+  barFill: { height: '100%', backgroundColor: colors.primary, borderRadius: radius.sm },
+  text: { fontSize: fontSize.base, fontWeight: fontWeight.semibold, color: colors.textSecondary, minWidth: 30 },
 });

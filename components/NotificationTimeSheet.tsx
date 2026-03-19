@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import BottomSheet from './ui/BottomSheet';
 import Button from './ui/Button';
+import { colors, spacing, fontSize } from '../theme';
 
 interface NotificationTimeSheetProps {
   visible: boolean;
@@ -34,14 +35,14 @@ export default function NotificationTimeSheet({
       <Button
         title="확인"
         onPress={() => onSave(selected)}
-        style={{ marginTop: 20 }}
+        style={{ marginTop: spacing.xl }}
       />
     </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  desc: { fontSize: 14, color: '#6B7280', marginBottom: 16 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  desc: { fontSize: fontSize.base, color: colors.textTertiary, marginBottom: spacing.lg },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   hourBtn: { paddingVertical: 10, paddingHorizontal: 14 },
 });

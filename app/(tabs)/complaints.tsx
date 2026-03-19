@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { getAllComplaints } from '../../services/firestore';
 import { Complaint } from '../../types';
 import ComplaintItem from '../../components/ComplaintItem';
+import { colors, spacing, fontSize } from '../../theme';
 
 export default function ComplaintsScreen() {
   const { firebaseUser } = useAuthStore();
@@ -43,8 +44,8 @@ export default function ComplaintsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9FAFB' },
-  list: { padding: 16 },
+  container: { flex: 1, backgroundColor: colors.bg },
+  list: { padding: spacing.xl },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  empty: { fontSize: 16, color: '#9CA3AF' },
+  empty: { fontSize: fontSize.lg, color: colors.textMuted },
 });

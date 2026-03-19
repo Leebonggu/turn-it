@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Complaint } from '../types';
 import { QUESTIONS } from '../constants/questions';
 import { formatDate } from '../utils/date';
+import { colors, spacing, fontSize, radius, lineHeight } from '../theme';
 
 interface ComplaintItemProps {
   complaint: Complaint;
@@ -33,14 +34,14 @@ export default function ComplaintItem({ complaint }: ComplaintItemProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 12,
-    borderWidth: 1, borderColor: '#F3F4F6',
+    backgroundColor: colors.surface, borderRadius: radius.md, padding: spacing.lg, marginBottom: spacing.md,
+    borderWidth: 1, borderColor: colors.borderSubtle,
   },
-  header: { marginBottom: 8 },
-  date: { fontSize: 12, color: '#9CA3AF', marginBottom: 4 },
-  question: { fontSize: 13, color: '#6B7280', fontStyle: 'italic' },
-  content: { fontSize: 15, color: '#1F2937', lineHeight: 22 },
+  header: { marginBottom: spacing.sm },
+  date: { fontSize: fontSize.xs, color: colors.textMuted, marginBottom: spacing.xs },
+  question: { fontSize: fontSize.sm, color: colors.textTertiary, fontStyle: 'italic' },
+  content: { fontSize: fontSize.md, color: colors.text, lineHeight: lineHeight.normal },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 10 },
-  tag: { backgroundColor: '#F3F4F6', paddingVertical: 4, paddingHorizontal: 10, borderRadius: 12 },
-  tagText: { fontSize: 12, color: '#6B7280' },
+  tag: { backgroundColor: colors.surfaceMuted, paddingVertical: spacing.xs, paddingHorizontal: 10, borderRadius: radius.md },
+  tagText: { fontSize: fontSize.xs, color: colors.textTertiary },
 });

@@ -1,6 +1,7 @@
 import { Text, StyleSheet } from 'react-native';
 import Card from './ui/Card';
 import { Question } from '../types';
+import { colors, spacing, fontSize, fontWeight, lineHeight } from '../theme';
 
 interface QuestionCardProps {
   question: Question;
@@ -16,7 +17,7 @@ export default function QuestionCard({ question }: QuestionCardProps) {
 }
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: '#4F46E5' },
-  category: { fontSize: 12, color: 'rgba(255,255,255,0.7)', marginBottom: 8 },
-  text: { fontSize: 18, fontWeight: '600', color: '#fff', lineHeight: 26 },
+  card: { backgroundColor: colors.primary },
+  category: { fontSize: fontSize.xs, color: 'rgba(255,255,255,0.7)', marginBottom: spacing.sm },
+  text: { fontSize: fontSize.xl, fontWeight: fontWeight.semibold, color: colors.textInverse, lineHeight: lineHeight.relaxed },
 });
