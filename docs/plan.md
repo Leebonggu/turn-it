@@ -930,7 +930,7 @@ git commit -m "[기능] 날짜/사이클 유틸리티 함수 및 테스트"
 - Create: `firestore.rules`
 - Create: `firestore.indexes.json`
 
-- [ ] **Step 1: Firestore CRUD 서비스**
+- [x] **Step 1: Firestore CRUD 서비스**
 
 ```typescript
 // services/firestore.ts
@@ -1042,7 +1042,7 @@ export async function resetCycle(userId: string): Promise<string> {
 }
 ```
 
-- [ ] **Step 2: Firestore 보안 규칙**
+- [x] **Step 2: Firestore 보안 규칙**
 
 ```
 // firestore.rules
@@ -1066,7 +1066,7 @@ service cloud.firestore {
 
 > **Note:** Firestore `list` 규칙에서 `resource.data`를 사용하면 쿼리에 `where('userId', '==', uid)` 필터가 반드시 포함되어야 Firestore가 규칙을 평가할 수 있음. 모든 쿼리에 userId 필터를 포함하고 있으므로 `read`(=`get`+`list`) 통합 규칙으로 충분.
 
-- [ ] **Step 3: Firestore 인덱스**
+- [x] **Step 3: Firestore 인덱스**
 
 ```json
 // firestore.indexes.json
@@ -1110,7 +1110,7 @@ service cloud.firestore {
 }
 ```
 
-- [ ] **Step 4: 커밋**
+- [x] **Step 4: 커밋**
 
 ```bash
 git add services/firestore.ts firestore.rules firestore.indexes.json
