@@ -1,13 +1,60 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, Alert } from 'react-native';
+import { useAuthStore } from '../../stores/authStore';
+import { useCycleStore } from '../../stores/cycleStore';
+import { updateUser } from '../../services/firestore';
+import { signOut } from '../../services/auth';
+import Button from '../../components/ui/Button';
+import NotificationTimeSheet from '../../components/NotificationTimeSheet';
 
 export default function SettingsScreen() {
+  const { firebaseUser } = useAuthStore();
+  const { userData } = useCycleStore();
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
+  const handleSaveTime = async (time: string) => {
+    if (!firebaseUser) return;
+    await updateUser(firebaseUser.uid, { notificationTime: time, notificationTimeSet: true });
+    setShowTimePicker(false);
+  };
+
+  const handleSignOut = () => {
+    Alert.alert('로그아웃', '정말 로그아웃 하시겠어요?', [
+      { text: '취소', style: 'cancel' },
+      { text: '로그아웃', style: 'destructive', onPress: () => signOut() },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>설정</Text>
+      <View style={styles.section}>
+        <Text style={styles.label}>알림 시간</Text>
+        <Button
+          title={userData?.notificationTime ?? '21:00'}
+          variant="outline"
+          onPress={() => setShowTimePicker(true)}
+        />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.label}>계정</Text>
+        <Text style={styles.email}>{firebaseUser?.email}</Text>
+        <Button title="로그아웃" variant="outline" onPress={handleSignOut} />
+      </View>
+
+      <NotificationTimeSheet
+        visible={showTimePicker}
+        currentTime={userData?.notificationTime ?? '21:00'}
+        onSave={handleSaveTime}
+        onClose={() => setShowTimePicker(false)}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  container: { flex: 1, backgroundColor: '#F9FAFB', padding: 20 },
+  section: { marginBottom: 32 },
+  label: { fontSize: 16, fontWeight: '600', color: '#374151', marginBottom: 12 },
+  email: { fontSize: 14, color: '#6B7280', marginBottom: 12 },
 });
