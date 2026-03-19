@@ -828,7 +828,7 @@ git commit -m "[기능] 인증 라우팅 및 로그인 화면 구현"
 - Create: `utils/date.ts`
 - Create: `utils/cycle.ts`
 
-- [ ] **Step 1: 날짜 유틸**
+- [x] **Step 1: 날짜 유틸**
 
 ```typescript
 // utils/date.ts
@@ -843,7 +843,7 @@ export function formatDate(date: Date): string {
 }
 ```
 
-- [ ] **Step 2: 사이클 유틸에 대한 테스트 작성**
+- [x] **Step 2: 사이클 유틸에 대한 테스트 작성**
 
 ```typescript
 // utils/__tests__/cycle.test.ts
@@ -877,14 +877,14 @@ describe('getCycleStatus', () => {
 });
 ```
 
-- [ ] **Step 3: 테스트 실행 — 실패 확인**
+- [x] **Step 3: 테스트 실행 — 실패 확인**
 
 ```bash
 npx jest utils/__tests__/cycle.test.ts
 ```
 Expected: FAIL (모듈 없음)
 
-- [ ] **Step 4: 사이클 유틸 구현**
+- [x] **Step 4: 사이클 유틸 구현**
 
 ```typescript
 // utils/cycle.ts
@@ -907,14 +907,14 @@ export function generateCycleId(userId: string): string {
 }
 ```
 
-- [ ] **Step 5: 테스트 실행 — 통과 확인**
+- [x] **Step 5: 테스트 실행 — 통과 확인**
 
 ```bash
 npx jest utils/__tests__/cycle.test.ts
 ```
 Expected: PASS
 
-- [ ] **Step 6: 커밋**
+- [x] **Step 6: 커밋**
 
 ```bash
 git add utils/
