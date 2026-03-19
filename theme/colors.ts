@@ -24,6 +24,8 @@ export const colors = {
   success: '#059669',
   successBg: '#ECFDF5',
   warning: '#D97706',
+  error: '#DC2626',
+  errorBg: '#FEF2F2',
 
   // Overlay
   overlay: 'rgba(0,0,0,0.4)',

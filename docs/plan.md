@@ -2673,10 +2673,26 @@ git commit -m "[설정] Firebase 환경 설정 및 통합 테스트 완료"
 > MVP 구현 중 발견한 개선사항/리팩토링 목록. MVP 완성 후 진행.
 
 - [ ] **jest 설정 정리**: jest 30 + react-native 0.83 ESM 호환 문제로 jest 29로 다운그레이드함. jest-expo가 jest 30을 공식 지원하면 업그레이드 필요.
-- [ ] **@testing-library/jest-native deprecated**: `@testing-library/react-native` v12.4+의 내장 Jest matchers로 마이그레이션 필요.
+- [x] **@testing-library/jest-native deprecated**: deprecated 패키지 제거 완료. @testing-library/react-native v13 내장 matchers 사용.
 - [x] **Button 컴포넌트 접근성**: `accessibilityRole="button"`, `accessibilityState={{ disabled }}` 추가.
-- [ ] **로그인 화면 UX**: 로딩 상태 표시, 에러 재시도 UI, Apple 로그인 추가.
-- [ ] **탭 아이콘**: 이모지 대신 `@expo/vector-icons` 사용으로 교체.
+- [x] **로그인 화면 UX**: 로딩 상태(ActivityIndicator), 에러 표시 + 재시도 버튼 추가. Apple 로그인은 App Store 제출 전 추가.
+- [x] **탭 아이콘**: 이모지 → `@expo/vector-icons` Ionicons 교체. 활성/비활성 색상 디자인 토큰 적용.
 - [x] **디자인 시스템**: `theme/` 디렉토리에 colors, spacing, typography, radius, shadows 토큰 정의. 전체 컴포넌트 리팩토링 완료.
 - [x] **색상 불일치 수정**: 로그인 화면 `#666` → `colors.textTertiary`, 리스트 패딩 불일치 수정.
 - [x] **IdeaCard/TagSelector 접근성**: accessibilityRole, accessibilityState 추가.
+- [x] **에러 색상 토큰 추가**: `colors.error`, `colors.errorBg` 추가.
+
+### 추가 할일 (MVP 이후)
+
+- [ ] **Apple 로그인**: App Store 제출 요건. `expo-apple-authentication` 사용.
+- [ ] **온보딩 화면**: 서비스 소개 3장 슬라이드 (`(auth)/onboarding.tsx`).
+- [ ] **Toast 컴포넌트**: 기록 저장/삭제 등 피드백 UI (`components/ui/Toast.tsx`).
+- [ ] **Pull-to-refresh 개선**: 홈 화면에도 새로고침 추가 (현재 목록 화면만 있음).
+- [ ] **에러 바운더리**: 전역 에러 처리 + 폴백 UI.
+- [ ] **스켈레톤 로딩**: ActivityIndicator 대신 컨텐츠 형태의 스켈레톤 UI.
+- [ ] **다크 모드**: `theme/colors.ts`에 dark 팔레트 추가 + `useColorScheme()` 연동.
+- [ ] **앱 아이콘/스플래시**: 브랜딩 확정 후 에셋 교체.
+- [ ] **분석/통계**: 사이클별 기록 통계, 태그 분포 차트.
+- [ ] **오프라인 지원**: Firestore 오프라인 캐시 활성화 + 네트워크 상태 UI.
+- [ ] **성능 최적화**: FlatList `getItemLayout`, 컴포넌트 `React.memo` 적용.
+- [ ] **E2E 테스트**: Detox 또는 Maestro로 주요 플로우 자동화.
