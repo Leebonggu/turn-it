@@ -1125,7 +1125,7 @@ git commit -m "[기능] Firestore 서비스, 보안 규칙, 인덱스 설정"
 - Create: `stores/cycleStore.ts`
 - Create: `hooks/useCycle.ts`
 
-- [ ] **Step 1: 사이클 스토어**
+- [x] **Step 1: 사이클 스토어**
 
 ```typescript
 // stores/cycleStore.ts
@@ -1160,7 +1160,7 @@ export const useCycleStore = create<CycleState>((set) => ({
 }));
 ```
 
-- [ ] **Step 2: 사이클 훅**
+- [x] **Step 2: 사이클 훅**
 
 ```typescript
 // hooks/useCycle.ts
@@ -1220,7 +1220,7 @@ export function useCycle() {
 }
 ```
 
-- [ ] **Step 3: 커밋**
+- [x] **Step 3: 커밋**
 
 ```bash
 git add stores/cycleStore.ts hooks/useCycle.ts
