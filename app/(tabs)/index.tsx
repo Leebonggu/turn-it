@@ -9,7 +9,7 @@ import Button from '../../components/ui/Button';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { userData, currentComplaints, cycleStatus, todayRecorded, startCycle, refresh } = useCycle();
+  const { userData, currentComplaints, cycleStatus, todayRecorded, startCycle, resetCurrentCycle, refresh } = useCycle();
 
   const questionIndex = getQuestionForCycle(currentComplaints.length, QUESTIONS.length);
   const question = QUESTIONS[questionIndex];
@@ -63,6 +63,12 @@ export default function HomeScreen() {
         <View style={{ marginTop: 24 }}>
           <Text style={styles.readyText}>기록이 충분해요! 아이디어를 만들어볼까요?</Text>
           <Button title="아이디어 생성하기" onPress={handleAnalyze} />
+          <Button
+            title="새로운 사이클 시작하기"
+            variant="outline"
+            onPress={resetCurrentCycle}
+            style={{ marginTop: 12 }}
+          />
         </View>
       )}
     </ScrollView>

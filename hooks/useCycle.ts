@@ -2,7 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { useCycleStore } from '../stores/cycleStore';
 import { useAuthStore } from '../stores/authStore';
 import {
-  getUser, getComplaintsByCycle, getTodayComplaint, startNewCycle,
+  getUser, getComplaintsByCycle, getTodayComplaint, startNewCycle, resetCycle,
 } from '../services/firestore';
 import { getCycleStatus } from '../utils/cycle';
 
@@ -47,8 +47,14 @@ export function useCycle() {
     await refresh();
   }, [firebaseUser, refresh]);
 
+  const resetCurrentCycle = useCallback(async () => {
+    if (!firebaseUser) return;
+    await resetCycle(firebaseUser.uid);
+    await refresh();
+  }, [firebaseUser, refresh]);
+
   return {
     userData, currentComplaints, cycleStatus, todayRecorded, isLoading,
-    refresh, startCycle,
+    refresh, startCycle, resetCurrentCycle,
   };
 }

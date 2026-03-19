@@ -2388,7 +2388,7 @@ git commit -m "[기능] 아이디어 목록 및 상세 화면 구현"
 - Create: `hooks/useNotification.ts`
 - Modify: `app/_layout.tsx` (알림 초기화 추가)
 
-- [ ] **Step 1: 알림 훅**
+- [x] **Step 1: 알림 훅**
 
 ```typescript
 // hooks/useNotification.ts
@@ -2453,7 +2453,7 @@ async function registerForPushNotifications() {
 }
 ```
 
-- [ ] **Step 2: 루트 레이아웃 전체 교체 (알림 + 첫 로그인 바텀시트 통합)**
+- [x] **Step 2: 루트 레이아웃 전체 교체 (알림 + 첫 로그인 바텀시트 통합)**
 
 `app/_layout.tsx`를 아래 전체 코드로 교체:
 
@@ -2540,7 +2540,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-- [ ] **Step 3: 커밋**
+- [x] **Step 3: 커밋**
 
 ```bash
 git add hooks/useNotification.ts app/_layout.tsx
@@ -2555,7 +2555,7 @@ git commit -m "[기능] 로컬 알림 및 첫 로그인 알림 시간 설정"
 - Modify: `app/(tabs)/index.tsx` (사이클 리셋 버튼)
 - Modify: `hooks/useCycle.ts` (리셋 함수)
 
-- [ ] **Step 1: useCycle에 리셋 함수 추가**
+- [x] **Step 1: useCycle에 리셋 함수 추가**
 
 ```typescript
 // hooks/useCycle.ts 에 추가
@@ -2568,7 +2568,7 @@ const resetCurrentCycle = useCallback(async () => {
 // return에 resetCurrentCycle 추가
 ```
 
-- [ ] **Step 2: 홈 화면에 리셋 버튼 추가**
+- [x] **Step 2: 홈 화면에 리셋 버튼 추가**
 
 아이디어 생성 완료 후(ideas가 있고 cycleStatus가 ready일 때) "새로운 사이클 시작하기" 버튼 표시.
 
@@ -2584,7 +2584,7 @@ const resetCurrentCycle = useCallback(async () => {
 )}
 ```
 
-- [ ] **Step 3: 커밋**
+- [x] **Step 3: 커밋**
 
 ```bash
 git add hooks/useCycle.ts app/(tabs)/index.tsx
