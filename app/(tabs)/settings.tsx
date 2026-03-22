@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../stores/authStore';
 import { useCycleStore } from '../../stores/cycleStore';
+import { useToast } from '../../hooks/useToast';
 import { updateUser } from '../../services/firestore';
 import { signOut } from '../../services/auth';
 import Button from '../../components/ui/Button';
@@ -13,12 +14,18 @@ export default function SettingsScreen() {
   const router = useRouter();
   const { firebaseUser } = useAuthStore();
   const { userData } = useCycleStore();
+  const { showToast } = useToast();
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   const handleSaveTime = async (time: string) => {
     if (!firebaseUser) return;
-    await updateUser(firebaseUser.uid, { notificationTime: time, notificationTimeSet: true });
-    setShowTimePicker(false);
+    try {
+      await updateUser(firebaseUser.uid, { notificationTime: time, notificationTimeSet: true });
+      setShowTimePicker(false);
+      showToast('알림 시간이 변경되었어요.', 'success');
+    } catch (e) {
+      showToast('저장에 실패했어요. 다시 시도해주세요.', 'error');
+    }
   };
 
   const handleSignOut = () => {

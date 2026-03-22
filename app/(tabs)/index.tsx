@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useCycle } from '../../hooks/useCycle';
 import { useToast } from '../../hooks/useToast';
 import { useAuthStore } from '../../stores/authStore';
-import { getUserCycles, getComplaintsByCycle, completeCycle, updateUser } from '../../services/firestore';
+import { getUserCycles, getComplaintsByCycle, getAllComplaints, completeCycle, updateUser } from '../../services/firestore';
 import { generateIdeas } from '../../services/ai';
 import { QUESTIONS } from '../../constants/questions';
 import { getQuestionForCycle } from '../../utils/cycle';
@@ -29,6 +29,7 @@ export default function HomeScreen() {
   const [pastCycles, setPastCycles] = useState<(Cycle & { complaintCount: number })[]>([]);
   const [loadingCycles, setLoadingCycles] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   const questionIndex = getQuestionForCycle(currentComplaints.length, QUESTIONS.length);
   const question = QUESTIONS[questionIndex];
@@ -43,15 +44,17 @@ export default function HomeScreen() {
     if (!firebaseUser) return;
     setLoadingCycles(true);
     try {
-      const { cycles } = await getUserCycles(firebaseUser.uid);
-      const completed = cycles.filter((c) => c.status === 'completed').slice(0, 5);
-      const withCounts = await Promise.all(
-        completed.map(async (c) => {
-          const complaints = await getComplaintsByCycle(firebaseUser.uid, c.id!);
-          return { ...c, complaintCount: complaints.length };
-        })
-      );
-      setPastCycles(withCounts);
+      const [{ cycles }, allComplaints] = await Promise.all([
+        getUserCycles(firebaseUser.uid),
+        getAllComplaints(firebaseUser.uid),
+      ]);
+      const countMap: Record<string, number> = {};
+      allComplaints.forEach((c) => { countMap[c.cycleId] = (countMap[c.cycleId] || 0) + 1; });
+      const completed = cycles
+        .filter((c) => c.status === 'completed')
+        .slice(0, 5)
+        .map((c) => ({ ...c, complaintCount: countMap[c.id!] || 0 }));
+      setPastCycles(completed);
     } finally {
       setLoadingCycles(false);
     }
@@ -87,16 +90,32 @@ export default function HomeScreen() {
   };
 
   const handleConfirmName = async () => {
+    if (processing) return;
     const name = cycleName.trim() || '새 사이클';
     setShowNameModal(false);
-    await startCycle(name);
-    showToast('새 사이클이 시작되었어요!', 'success');
+    setProcessing(true);
+    try {
+      await startCycle(name);
+      showToast('새 사이클이 시작되었어요!', 'success');
+    } catch (e) {
+      showToast('사이클 시작에 실패했어요. 다시 시도해주세요.', 'error');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleEndCycle = async () => {
+    if (processing) return;
     setShowEndModal(false);
-    await endCycle();
-    showToast('사이클이 종료되었어요.', 'success');
+    setProcessing(true);
+    try {
+      await endCycle();
+      showToast('사이클이 종료되었어요.', 'success');
+    } catch (e) {
+      showToast('사이클 종료에 실패했어요. 다시 시도해주세요.', 'error');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const formatDate = (timestamp: any) => {

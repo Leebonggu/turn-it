@@ -4,6 +4,7 @@ import { addIdeas } from './firestore';
 
 const API_KEY = process.env.EXPO_PUBLIC_AI_API_KEY;
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const MAX_RETRIES = 3;
 
 function buildPrompt(complaints: Complaint[]): string {
   const list = complaints
@@ -32,21 +33,42 @@ ${list}
 반드시 위 JSON 형식으로만 응답하세요.`;
 }
 
+async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function callGemini(prompt: string): Promise<string> {
-  const res = await fetch(`${API_URL}?key=${API_KEY}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-    }),
-  });
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    const res = await fetch(`${API_URL}?key=${API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+      }),
+    });
 
-  if (!res.ok) {
-    throw new Error(`AI API 오류: ${res.status}`);
+    if (res.status === 429) {
+      const retryAfter = Math.min(Math.pow(2, attempt) * 1000, 30000);
+      if (attempt < MAX_RETRIES - 1) {
+        await sleep(retryAfter);
+        continue;
+      }
+      throw new Error('API 요청 한도를 초과했어요. 잠시 후 다시 시도해주세요.');
+    }
+
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      if (attempt < MAX_RETRIES - 1) {
+        await sleep(Math.pow(2, attempt) * 1000);
+        continue;
+      }
+      throw new Error(`AI API 오류 (${res.status}). 잠시 후 다시 시도해주세요.`);
+    }
+
+    const data = await res.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
   }
-
-  const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+  throw new Error('AI 서비스에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
 }
 
 export async function generateIdeas(
@@ -54,13 +76,15 @@ export async function generateIdeas(
   cycleId: string,
   complaints: Complaint[],
 ): Promise<void> {
-  const prompt = buildPrompt(complaints);
+  if (complaints.length === 0) {
+    throw new Error('기록이 없어서 아이디어를 생성할 수 없어요.');
+  }
 
-  let rawResponse: string;
+  const prompt = buildPrompt(complaints);
   let ideas: ReturnType<typeof parseAiResponse>;
 
   for (let attempt = 0; attempt < 2; attempt++) {
-    rawResponse = await callGemini(prompt);
+    const rawResponse = await callGemini(prompt);
     try {
       ideas = parseAiResponse(rawResponse);
       break;

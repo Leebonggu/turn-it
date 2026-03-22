@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../stores/authStore';
-import { getUserCycles, getComplaintsByCycle, getIdeasByCycle } from '../services/firestore';
+import { getUserCycles, getAllComplaints, getAllIdeas } from '../services/firestore';
 import { Cycle } from '../types';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 import { colors, spacing, fontSize, fontWeight, radius } from '../theme';
@@ -20,6 +20,8 @@ export default function CycleHistoryScreen() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null);
   const [hasMore, setHasMore] = useState(true);
+  const [complaintCounts, setComplaintCounts] = useState<Record<string, number>>({});
+  const [ideaCounts, setIdeaCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
     loadCycles();
@@ -29,8 +31,24 @@ export default function CycleHistoryScreen() {
     if (!firebaseUser) return;
     setIsLoading(true);
     try {
-      const result = await getUserCycles(firebaseUser.uid);
-      const withStats = await addStats(result.cycles);
+      const [result, allComplaints, allIdeas] = await Promise.all([
+        getUserCycles(firebaseUser.uid),
+        getAllComplaints(firebaseUser.uid),
+        getAllIdeas(firebaseUser.uid),
+      ]);
+
+      const cCounts: Record<string, number> = {};
+      allComplaints.forEach((c) => { cCounts[c.cycleId] = (cCounts[c.cycleId] || 0) + 1; });
+      const iCounts: Record<string, number> = {};
+      allIdeas.forEach((i) => { iCounts[i.cycleId] = (iCounts[i.cycleId] || 0) + 1; });
+      setComplaintCounts(cCounts);
+      setIdeaCounts(iCounts);
+
+      const withStats = result.cycles.map((cycle) => ({
+        ...cycle,
+        complaintsFetched: cCounts[cycle.id!] || 0,
+        ideasCount: iCounts[cycle.id!] || 0,
+      }));
       setCycles(withStats);
       setLastDoc(result.lastDoc);
       setHasMore(result.cycles.length === 20);
@@ -44,25 +62,18 @@ export default function CycleHistoryScreen() {
     setIsLoadingMore(true);
     try {
       const result = await getUserCycles(firebaseUser.uid, lastDoc);
-      const withStats = await addStats(result.cycles);
+      const withStats = result.cycles.map((cycle) => ({
+        ...cycle,
+        complaintsFetched: complaintCounts[cycle.id!] || 0,
+        ideasCount: ideaCounts[cycle.id!] || 0,
+      }));
       setCycles((prev) => [...prev, ...withStats]);
       setLastDoc(result.lastDoc);
       setHasMore(result.cycles.length === 20);
     } finally {
       setIsLoadingMore(false);
     }
-  }, [firebaseUser, hasMore, isLoadingMore, lastDoc]);
-
-  const addStats = async (rawCycles: Cycle[]): Promise<CycleWithStats[]> => {
-    if (!firebaseUser) return [];
-    return Promise.all(
-      rawCycles.map(async (cycle) => {
-        const complaints = await getComplaintsByCycle(firebaseUser.uid, cycle.id!);
-        const ideas = await getIdeasByCycle(firebaseUser.uid, cycle.id!);
-        return { ...cycle, complaintsFetched: complaints.length, ideasCount: ideas.length };
-      })
-    );
-  };
+  }, [firebaseUser, hasMore, isLoadingMore, lastDoc, complaintCounts, ideaCounts]);
 
   const formatDate = (timestamp: any) => {
     if (!timestamp?.toDate) return '';
