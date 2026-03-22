@@ -34,6 +34,10 @@ yarn-error.*
 .env
 .env*.local
 
+# Firebase native config (API keys 포함)
+google-services.json
+GoogleService-Info.plist
+
 # Claude Code local settings
 .claude/settings.local.json
 
