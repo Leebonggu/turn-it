@@ -1,29 +1,29 @@
 import { create } from 'zustand';
-import { Complaint, User } from '../types';
+import { Complaint, Cycle, User } from '../types';
 import { CycleStatus } from '../utils/cycle';
 
 interface CycleState {
   userData: User | null;
+  currentCycle: Cycle | null;
   currentComplaints: Complaint[];
   cycleStatus: CycleStatus;
-  todayRecorded: boolean;
   isLoading: boolean;
   setUserData: (data: User | null) => void;
+  setCurrentCycle: (cycle: Cycle | null) => void;
   setCurrentComplaints: (complaints: Complaint[]) => void;
   setCycleStatus: (status: CycleStatus) => void;
-  setTodayRecorded: (recorded: boolean) => void;
   setLoading: (loading: boolean) => void;
 }
 
 export const useCycleStore = create<CycleState>((set) => ({
   userData: null,
+  currentCycle: null,
   currentComplaints: [],
   cycleStatus: 'not_started',
-  todayRecorded: false,
   isLoading: true,
   setUserData: (data) => set({ userData: data }),
+  setCurrentCycle: (cycle) => set({ currentCycle: cycle }),
   setCurrentComplaints: (complaints) => set({ currentComplaints: complaints }),
   setCycleStatus: (status) => set({ cycleStatus: status }),
-  setTodayRecorded: (recorded) => set({ todayRecorded: recorded }),
   setLoading: (loading) => set({ isLoading: loading }),
 }));

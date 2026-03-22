@@ -5,8 +5,8 @@ export function getQuestionForCycle(recordCount: number, poolSize: number): numb
 }
 
 export function getCycleStatus(recordCount: number, hasCycle: boolean): CycleStatus {
-  if (!hasCycle || recordCount === 0) return 'not_started';
-  if (recordCount < 3) return 'in_progress';
+  if (!hasCycle) return 'not_started';
+  if (recordCount < 3) return 'in_progress';  // 0~2개
   if (recordCount < 7) return 'early_analysis';
   return 'ready';
 }

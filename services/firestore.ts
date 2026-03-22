@@ -1,9 +1,10 @@
 import {
   collection, doc, getDoc, getDocs, setDoc, updateDoc, addDoc,
-  query, where, orderBy, Timestamp, serverTimestamp,
+  query, where, orderBy, limit, startAfter, Timestamp, serverTimestamp,
+  QueryDocumentSnapshot,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { User, Complaint, Idea, Tag } from '../types';
+import { User, Complaint, Idea, Cycle, Tag } from '../types';
 
 // === Users ===
 export async function getUser(userId: string): Promise<User | null> {
@@ -42,12 +43,6 @@ export async function getAllComplaints(userId: string): Promise<Complaint[]> {
   );
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Complaint));
-}
-
-export async function getTodayComplaint(userId: string, cycleId: string): Promise<Complaint | null> {
-  const complaints = await getComplaintsByCycle(userId, cycleId);
-  const today = new Date().toDateString();
-  return complaints.find((c) => c.createdAt?.toDate?.().toDateString() === today) ?? null;
 }
 
 // === Ideas ===
@@ -92,15 +87,51 @@ export async function updateIdeaStatus(ideaId: string, status: Idea['status']) {
 }
 
 // === Cycle ===
-export async function startNewCycle(userId: string): Promise<string> {
-  const cycleId = `${userId}_${Date.now()}`;
+export async function startNewCycle(userId: string, name: string = '새 사이클'): Promise<string> {
+  const cycleRef = await addDoc(collection(db, 'cycles'), {
+    userId,
+    name,
+    status: 'active',
+    createdAt: serverTimestamp(),
+    completedAt: null,
+  });
   await updateUser(userId, {
     cycleStartedAt: Timestamp.now(),
-    currentCycleId: cycleId,
+    currentCycleId: cycleRef.id,
   } as Partial<User>);
-  return cycleId;
+  return cycleRef.id;
 }
 
-export async function resetCycle(userId: string): Promise<string> {
-  return startNewCycle(userId);
+export async function completeCycle(cycleId: string) {
+  await updateDoc(doc(db, 'cycles', cycleId), {
+    status: 'completed',
+    completedAt: serverTimestamp(),
+  });
 }
+
+export async function getCycle(cycleId: string): Promise<Cycle | null> {
+  const snap = await getDoc(doc(db, 'cycles', cycleId));
+  return snap.exists() ? ({ id: snap.id, ...snap.data() } as Cycle) : null;
+}
+
+const CYCLES_PAGE_SIZE = 20;
+
+export async function getUserCycles(
+  userId: string,
+  lastDoc?: QueryDocumentSnapshot,
+): Promise<{ cycles: Cycle[]; lastDoc: QueryDocumentSnapshot | null }> {
+  const constraints = [
+    collection(db, 'cycles'),
+    where('userId', '==', userId),
+    orderBy('createdAt', 'desc'),
+    limit(CYCLES_PAGE_SIZE),
+  ];
+  if (lastDoc) constraints.push(startAfter(lastDoc));
+
+  const q = query(...(constraints as [any, ...any[]]));
+  const snap = await getDocs(q);
+  const cycles = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Cycle));
+  const last = snap.docs.length > 0 ? snap.docs[snap.docs.length - 1] : null;
+  return { cycles, lastDoc: last };
+}
+

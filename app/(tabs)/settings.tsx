@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../stores/authStore';
 import { useCycleStore } from '../../stores/cycleStore';
 import { updateUser } from '../../services/firestore';
@@ -9,6 +10,7 @@ import NotificationTimeSheet from '../../components/NotificationTimeSheet';
 import { colors, spacing, fontSize, fontWeight } from '../../theme';
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const { firebaseUser } = useAuthStore();
   const { userData } = useCycleStore();
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -34,6 +36,15 @@ export default function SettingsScreen() {
           title={userData?.notificationTime ?? '21:00'}
           variant="outline"
           onPress={() => setShowTimePicker(true)}
+        />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.label}>사이클</Text>
+        <Button
+          title="사이클 히스토리"
+          variant="outline"
+          onPress={() => router.push('/cycle-history')}
         />
       </View>
 

@@ -2696,6 +2696,7 @@ git commit -m "[설정] Firebase 환경 설정 및 통합 테스트 완료"
 - [x] **오프라인 지원**: Firestore 오프라인 캐시 + OfflineBanner + useNetworkStatus 훅.
 - [ ] **성능 최적화**: FlatList `getItemLayout`, 컴포넌트 `React.memo` 적용.
 - [ ] **E2E 테스트**: Detox 또는 Maestro로 주요 플로우 자동화.
+- [ ] **PRD 생성 기능**: 아이디어 상세에서 "PRD 생성" 버튼 → AI가 아이디어 + 원본 불만(`basedOnComplaintIds`)을 기반으로 구체적인 PRD 문서 생성. PRD 저장/조회/수정 기능 포함.
 - [ ] **아이디어 상세 Toast**: 상태 변경 시 피드백 Toast 추가.
 - [ ] **불만 삭제**: 스와이프 삭제 + 확인 다이얼로그.
 - [ ] **사이클 히스토리**: 과거 사이클 목록 + 아이디어 재조회.

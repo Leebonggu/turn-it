@@ -74,7 +74,8 @@ export default function RecordScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <QuestionCard question={question} />
 
-        <Text style={styles.label}>오늘의 불편함을 적어주세요</Text>
+        <Text style={styles.label}>불편함을 자유롭게 적어주세요</Text>
+        <Text style={styles.hint}>위 질문과 관련 없어도 괜찮아요</Text>
         <TextInput
           style={styles.input}
           multiline
@@ -108,5 +109,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface, borderRadius: radius.md, padding: spacing.lg,
     fontSize: fontSize.lg, minHeight: 120, borderWidth: 1, borderColor: colors.borderLight,
   },
+  hint: { fontSize: fontSize.sm, color: colors.textTertiary, marginBottom: spacing.sm },
   charCount: { fontSize: fontSize.xs, color: colors.textMuted, textAlign: 'right', marginTop: spacing.xs },
 });

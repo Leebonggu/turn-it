@@ -17,6 +17,7 @@ export function useNotification() {
   }, []);
 
   const scheduleDaily = async (hour: number, minute: number) => {
+    if (Platform.OS === 'web') return;
     await Notifications.cancelAllScheduledNotificationsAsync();
 
     await Notifications.scheduleNotificationAsync({
@@ -33,6 +34,7 @@ export function useNotification() {
   };
 
   const cancelAll = async () => {
+    if (Platform.OS === 'web') return;
     await Notifications.cancelAllScheduledNotificationsAsync();
   };
 

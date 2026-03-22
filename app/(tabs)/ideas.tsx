@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert } from 'reac
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '../../stores/authStore';
 import { useCycleStore } from '../../stores/cycleStore';
-import { getAllIdeas } from '../../services/firestore';
+import { getAllIdeas, completeCycle, updateUser } from '../../services/firestore';
 import { generateIdeas } from '../../services/ai';
 import { Idea } from '../../types';
 import IdeaCard from '../../components/IdeaCard';

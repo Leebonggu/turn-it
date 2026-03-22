@@ -2,15 +2,15 @@ import { useEffect, useCallback } from 'react';
 import { useCycleStore } from '../stores/cycleStore';
 import { useAuthStore } from '../stores/authStore';
 import {
-  getUser, getComplaintsByCycle, getTodayComplaint, startNewCycle, resetCycle,
+  getUser, getCycle, getComplaintsByCycle, startNewCycle, completeCycle, updateUser,
 } from '../services/firestore';
 import { getCycleStatus } from '../utils/cycle';
 
 export function useCycle() {
   const { firebaseUser } = useAuthStore();
   const {
-    userData, currentComplaints, cycleStatus, todayRecorded, isLoading,
-    setUserData, setCurrentComplaints, setCycleStatus, setTodayRecorded, setLoading,
+    userData, currentCycle, currentComplaints, cycleStatus, isLoading,
+    setUserData, setCurrentCycle, setCurrentComplaints, setCycleStatus, setLoading,
   } = useCycleStore();
 
   const refresh = useCallback(async () => {
@@ -21,16 +21,17 @@ export function useCycle() {
       setUserData(user);
 
       if (user?.currentCycleId) {
-        const complaints = await getComplaintsByCycle(firebaseUser.uid, user.currentCycleId);
+        const [cycle, complaints] = await Promise.all([
+          getCycle(user.currentCycleId),
+          getComplaintsByCycle(firebaseUser.uid, user.currentCycleId),
+        ]);
+        setCurrentCycle(cycle);
         setCurrentComplaints(complaints);
         setCycleStatus(getCycleStatus(complaints.length, true));
-
-        const today = await getTodayComplaint(firebaseUser.uid, user.currentCycleId);
-        setTodayRecorded(!!today);
       } else {
+        setCurrentCycle(null);
         setCurrentComplaints([]);
         setCycleStatus('not_started');
-        setTodayRecorded(false);
       }
     } finally {
       setLoading(false);
@@ -41,20 +42,21 @@ export function useCycle() {
     refresh();
   }, [refresh]);
 
-  const startCycle = useCallback(async () => {
+  const startCycle = useCallback(async (name?: string) => {
     if (!firebaseUser) return;
-    await startNewCycle(firebaseUser.uid);
+    await startNewCycle(firebaseUser.uid, name);
     await refresh();
   }, [firebaseUser, refresh]);
 
-  const resetCurrentCycle = useCallback(async () => {
-    if (!firebaseUser) return;
-    await resetCycle(firebaseUser.uid);
+  const endCycle = useCallback(async () => {
+    if (!firebaseUser || !userData?.currentCycleId) return;
+    await completeCycle(userData.currentCycleId);
+    await updateUser(firebaseUser.uid, { currentCycleId: null, cycleStartedAt: null });
     await refresh();
-  }, [firebaseUser, refresh]);
+  }, [firebaseUser, userData, refresh]);
 
   return {
-    userData, currentComplaints, cycleStatus, todayRecorded, isLoading,
-    refresh, startCycle, resetCurrentCycle,
+    userData, currentCycle, currentComplaints, cycleStatus, isLoading,
+    refresh, startCycle, endCycle,
   };
 }

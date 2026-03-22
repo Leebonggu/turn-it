@@ -35,6 +35,15 @@ export interface Idea {
   createdAt: Timestamp;
 }
 
+export interface Cycle {
+  id?: string;
+  userId: string;
+  name: string;
+  status: 'active' | 'completed';
+  createdAt: Timestamp;
+  completedAt: Timestamp | null;
+}
+
 export interface Question {
   id: string;
   text: string;
